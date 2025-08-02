@@ -1,0 +1,16 @@
+services:
+
+  api:
+    build:
+      context: ./backend
+    container_name: fastapi_sqlite
+    env_file:
+      - ./backend/.env
+    ports:
+      - "8000:80"
+    volumes:
+      # Monta el código para desarrollo en caliente
+      - ./backend:/app
+      # Monta la carpeta db para persistir el archivo SQLite
+      - ./db:/app/db
+    restart: on-failure
