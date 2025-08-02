@@ -5,6 +5,9 @@ from .database import get_db
 from . import models, crud, security
 from jose import JWTError, jwt
 from .config import settings
+from app.models import Usuario
+
+
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
