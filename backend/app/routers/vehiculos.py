@@ -1,14 +1,18 @@
+# app/routers/vehiculos.py
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
-from .. import crud, schemas, models
-from ..database import get_db
-from ..dependencies import get_current_active_user
+
+from app import crud, schemas, models
+from app.database import get_db
+from app.dependencies import get_current_active_user
 
 router = APIRouter(
     prefix="/vehiculos",
     tags=["Vehículos"],
 )
+
 
 @router.post("/", response_model=schemas.VehiculoInDB)
 def create_vehiculo_for_conductor(
@@ -27,7 +31,6 @@ def create_vehiculo_for_conductor(
             detail="Conductor no encontrado."
         )
 
-    # Verificar que el usuario autenticado sea el conductor o un admin
     if not current_user.es_admin and current_user.id_usuario != db_conductor.id_usuario:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -45,7 +48,7 @@ def read_vehiculo(
 ):
     """
     Obtiene los detalles de un vehículo específico.
-    Solo el conductor propietario o un administrador pueden ver la información completa.
+    Solo el conductor propietario o un administrador pueden ver la información.
     """
     db_vehiculo = crud.get_vehiculo(db, vehiculo_id)
     if not db_vehiculo:

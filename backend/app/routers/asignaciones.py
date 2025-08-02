@@ -1,16 +1,19 @@
+# app/routers/asignaciones.py
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from typing import List
-from .. import crud, schemas, models
-from ..database import get_db
-from ..dependencies import get_current_active_user
+
+from app import crud, schemas, models
+from app.database import get_db
+from app.dependencies import get_current_active_user
 
 router = APIRouter(
     prefix="/asignaciones",
     tags=["Asignaciones"],
 )
 
-@router.post("/", response_model=schemas.AsignacionInDB)
+
+@router.post("/", response_model=schemas.AsignacionInDB, status_code=201)
 def create_asignacion(
     asignacion: schemas.AsignacionCreate,
     db: Session = Depends(get_db),
@@ -25,6 +28,7 @@ def create_asignacion(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="No tienes permiso para crear asignaciones."
         )
+
     return crud.create_asignacion(db=db, asignacion=asignacion)
 
 
@@ -46,16 +50,15 @@ def read_asignacion(
         )
 
     db_solicitud = crud.get_solicitud(db, db_asignacion.id_solicitud)
-    db_cliente = crud.get_cliente(db, db_solicitud.id_cliente)
+    db_cliente = crud.get_cliente(db, db_solicitud.id_cliente) if db_solicitud else None
     db_conductor = crud.get_conductor(db, db_asignacion.id_conductor)
-    
-    # Verificar permisos
-    is_involved_user = (
-        current_user.id_usuario == db_cliente.id_usuario or
-        current_user.id_usuario == db_conductor.id_usuario
+
+    is_involved = (
+        (db_cliente and current_user.id_usuario == db_cliente.id_usuario)
+        or (db_conductor and current_user.id_usuario == db_conductor.id_usuario)
     )
 
-    if not current_user.es_admin and not is_involved_user:
+    if not current_user.es_admin and not is_involved:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="No tienes permiso para ver esta asignación."
@@ -67,7 +70,7 @@ def read_asignacion(
 @router.put("/{asignacion_id}/precio", response_model=schemas.AsignacionInDB)
 def update_asignacion_precio(
     asignacion_id: int,
-    precio: float,
+    data: dict,  # ← recibir como JSON body, no query param
     db: Session = Depends(get_db),
     current_user: models.Usuario = Depends(get_current_active_user),
 ):
@@ -75,6 +78,14 @@ def update_asignacion_precio(
     Actualiza el precio final de una asignación.
     Solo el conductor asignado o un administrador pueden realizar esta acción.
     """
+    precio = data.get("precio")
+
+    if precio is None:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="El campo 'precio' es obligatorio."
+        )
+
     db_asignacion = crud.get_asignacion(db, asignacion_id)
     if not db_asignacion:
         raise HTTPException(
@@ -84,10 +95,12 @@ def update_asignacion_precio(
 
     db_conductor = crud.get_conductor(db, db_asignacion.id_conductor)
 
-    if not current_user.es_admin and current_user.id_usuario != db_conductor.id_usuario:
+    if not current_user.es_admin and (
+        not db_conductor or current_user.id_usuario != db_conductor.id_usuario
+    ):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="No tienes permiso para actualizar esta asignación."
         )
-    
+
     return crud.update_asignacion_precio(db, asignacion_id, precio)

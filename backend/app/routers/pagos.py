@@ -1,13 +1,16 @@
+# app/routers/pagos.py
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from .. import crud, schemas, models
-from ..database import get_db
-from ..dependencies import get_current_active_user
+from app import crud, schemas, models
+from app.database import get_db
+from app.dependencies import get_current_active_user
 
 router = APIRouter(
     prefix="/transacciones_pago",
     tags=["Pagos"],
 )
+
 
 @router.post("/", response_model=schemas.TransaccionPagoInDB)
 def create_transaccion_pago(
@@ -18,7 +21,9 @@ def create_transaccion_pago(
     """
     Crea una nueva transacción de pago.
     """
-    return crud.create_transaccion_pago(db=db, transaccion=transaccion)
+    transaccion.id_usuario = current_user.id_usuario  # ← Asignación forzada
+    return crud.create_transaccion_pago(db=db, pago=transaccion)
+
 
 @router.get("/{transaccion_id}", response_model=schemas.TransaccionPagoInDB)
 def read_transaccion_pago(

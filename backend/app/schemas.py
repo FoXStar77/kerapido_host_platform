@@ -261,7 +261,8 @@ class TransaccionPagoCreate(TransaccionPagoBase):
     """
 
     id_asignacion: int
-
+    id_usuario: int
+    
 
 class TransaccionPagoInDB(TransaccionPagoBase):
     """
@@ -399,3 +400,5 @@ class ConductorServicioInDB(ConductorServicioBase):
     class Config:
         from_attributes = True
 
+IncidenteEmergenciaCreate = IncidenteCreate
+IncidenteEmergenciaInDB = IncidenteInDB

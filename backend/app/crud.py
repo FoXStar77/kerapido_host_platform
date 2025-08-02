@@ -365,37 +365,37 @@ def get_servicios_by_conductor(db: Session, conductor_id: int):
 # --- CRUD para tablas de catálogo ---
 
 
-def get_all_tipos_cliente(db: Session):
+def get_tipos_cliente(db: Session):
     """Obtiene todos los tipos de cliente."""
     logger.info("Obteniendo todos los tipos de cliente.")
     return db.query(models.TipoCliente).all()
 
 
-def get_all_estados_conductor(db: Session):
+def get_estados_conductor(db: Session):
     """Obtiene todos los estados de conductor."""
     logger.info("Obteniendo todos los estados de conductor.")
     return db.query(models.EstadoConductor).all()
 
 
-def get_all_tipos_vehiculo(db: Session):
+def get_tipos_vehiculo(db: Session):
     """Obtiene todos los tipos de vehículo."""
     logger.info("Obteniendo todos los tipos de vehículo.")
     return db.query(models.TipoVehiculo).all()
 
 
-def get_all_estados_vehiculo(db: Session):
+def get_estados_vehiculo(db: Session):
     """Obtiene todos los estados de vehículo."""
     logger.info("Obteniendo todos los estados de vehículo.")
     return db.query(models.EstadoVehiculo).all()
 
 
-def get_all_tipos_servicio(db: Session):
+def get_tipos_servicio(db: Session):
     """Obtiene todos los tipos de servicio."""
     logger.info("Obteniendo todos los tipos de servicio.")
     return db.query(models.TipoServicio).all()
 
 
-def get_all_estados_solicitud(db: Session):
+def get_estados_solicitud(db: Session):
     """Obtiene todos los estados de solicitud."""
     logger.info("Obteniendo todos los estados de solicitud.")
     return db.query(models.EstadoSolicitud).all()

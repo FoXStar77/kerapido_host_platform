@@ -1,13 +1,17 @@
+# app/routers/emergencias.py
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from .. import crud, schemas, models
-from ..database import get_db
-from ..dependencies import get_current_active_user
+
+from app import crud, schemas, models
+from app.database import get_db
+from app.dependencies import get_current_active_user
 
 router = APIRouter(
     prefix="/incidente_emergencia",
     tags=["Emergencias"],
 )
+
 
 @router.post("/", response_model=schemas.IncidenteEmergenciaInDB)
 def create_incidente(
@@ -18,7 +22,10 @@ def create_incidente(
     """
     Reporta un nuevo incidente o emergencia.
     """
-    return crud.create_incidente_emergencia(db=db, incidente=incidente)
+    # Forzamos la asociación con el usuario autenticado
+    incidente.id_usuario = current_user.id_usuario
+    return crud.create_incidente(db=db, incidente=incidente)
+
 
 @router.get("/{incidente_id}", response_model=schemas.IncidenteEmergenciaInDB)
 def read_incidente(
@@ -30,7 +37,7 @@ def read_incidente(
     Obtiene los detalles de un incidente específico.
     Solo el usuario que lo reportó o un administrador pueden verlo.
     """
-    db_incidente = crud.get_incidente_emergencia(db, incidente_id)
+    db_incidente = crud.get_incidente(db, incidente_id)
     if not db_incidente:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
