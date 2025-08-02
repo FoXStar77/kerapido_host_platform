@@ -16,7 +16,7 @@ from app.routers import (
     emergencias,
 )
 from app.middleware.rate_limiter import RateLimiterMiddleware
-from app.utils.loggin_config import setup_logging
+from app.utils.logging_config import setup_logging
 from app.config import settings
 
 
