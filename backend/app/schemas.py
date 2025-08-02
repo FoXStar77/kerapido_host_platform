@@ -4,27 +4,15 @@ from typing import Optional, List
 
 
 class Token(BaseModel):
-    """
-    Esquema para la respuesta del token JWT.
-    """
-
     access_token: str
     token_type: str
 
 
 class TokenData(BaseModel):
-    """
-    Esquema para la data del token JWT.
-    """
-
     username: Optional[str] = None
 
 
 class UsuarioBase(BaseModel):
-    """
-    Esquema base para un usuario.
-    """
-
     nombre: str
     apellidos: Optional[str] = None
     email: EmailStr
@@ -38,29 +26,16 @@ class UsuarioBase(BaseModel):
 
 
 class UsuarioCreate(UsuarioBase):
-    """
-    Esquema para la creación de un usuario.
-    """
-
     password: str
 
 
 class UsuarioUpdate(UsuarioBase):
-    """
-    Esquema para la actualización de un usuario.
-    """
-
     password: Optional[str] = None
     email_verificado: Optional[bool] = None
     telefono_confirmado: Optional[bool] = None
 
 
 class UsuarioInDB(UsuarioBase):
-    """
-    Esquema para un usuario tal como se almacena en la DB,
-    incluyendo su ID y fechas.
-    """
-
     id_usuario: int
     email_verificado: bool
     telefono_confirmado: bool
@@ -71,26 +46,14 @@ class UsuarioInDB(UsuarioBase):
 
 
 class ClienteBase(BaseModel):
-    """
-    Esquema base para un cliente.
-    """
-
     id_tipo_cliente: Optional[int] = None
 
 
 class ClienteCreate(ClienteBase):
-    """
-    Esquema para la creación de un cliente.
-    """
-
     id_usuario: int
 
 
 class ClienteInDB(ClienteBase):
-    """
-    Esquema para un cliente en la DB.
-    """
-
     id_cliente: int
     id_usuario: int
     usuario: UsuarioInDB
@@ -100,10 +63,6 @@ class ClienteInDB(ClienteBase):
 
 
 class ConductorBase(BaseModel):
-    """
-    Esquema base para un conductor.
-    """
-
     numero_licencia: str
     fecha_vencimiento_licencia: Optional[date] = None
     id_estado_conductor: Optional[int] = 1
@@ -111,18 +70,10 @@ class ConductorBase(BaseModel):
 
 
 class ConductorCreate(ConductorBase):
-    """
-    Esquema para la creación de un conductor.
-    """
-
     id_usuario: int
 
 
 class ConductorInDB(ConductorBase):
-    """
-    Esquema para un conductor en la DB.
-    """
-
     id_conductor: int
     id_usuario: int
     usuario: UsuarioInDB
@@ -134,10 +85,6 @@ class ConductorInDB(ConductorBase):
 
 
 class VehiculoBase(BaseModel):
-    """
-    Esquema base para un vehículo.
-    """
-
     marca: str
     modelo: str
     matricula: str
@@ -151,18 +98,10 @@ class VehiculoBase(BaseModel):
 
 
 class VehiculoCreate(VehiculoBase):
-    """
-    Esquema para la creación de un vehículo.
-    """
-
     id_conductor: int
 
 
 class VehiculoInDB(VehiculoBase):
-    """
-    Esquema para un vehículo en la DB.
-    """
-
     id_vehiculo: int
     id_conductor: int
 
@@ -171,10 +110,6 @@ class VehiculoInDB(VehiculoBase):
 
 
 class SolicitudBase(BaseModel):
-    """
-    Esquema base para una solicitud.
-    """
-
     origen_lat: float
     origen_lon: float
     destino_lat: Optional[float] = None
@@ -188,18 +123,10 @@ class SolicitudBase(BaseModel):
 
 
 class SolicitudCreate(SolicitudBase):
-    """
-    Esquema para la creación de una solicitud.
-    """
-
     id_cliente: int
 
 
 class SolicitudInDB(SolicitudBase):
-    """
-    Esquema para una solicitud en la DB.
-    """
-
     id_solicitud: int
     id_cliente: int
     fecha_solicitud: datetime
@@ -209,30 +136,18 @@ class SolicitudInDB(SolicitudBase):
 
 
 class AsignacionBase(BaseModel):
-    """
-    Esquema base para una asignación.
-    """
-
     fecha_hora_inicio_servicio: Optional[datetime] = None
     fecha_hora_fin_servicio: Optional[datetime] = None
     precio_final: Optional[float] = None
 
 
 class AsignacionCreate(AsignacionBase):
-    """
-    Esquema para la creación de una asignación.
-    """
-
     id_solicitud: int
     id_conductor: int
     id_vehiculo: int
 
 
 class AsignacionInDB(AsignacionBase):
-    """
-    Esquema para una asignación en la DB.
-    """
-
     id_asignacion: int
     id_solicitud: int
     id_conductor: int
@@ -244,10 +159,6 @@ class AsignacionInDB(AsignacionBase):
 
 
 class TransaccionPagoBase(BaseModel):
-    """
-    Esquema base para una transacción de pago.
-    """
-
     monto: float
     id_moneda: int
     id_tipo_metodo_pago: int
@@ -256,18 +167,11 @@ class TransaccionPagoBase(BaseModel):
 
 
 class TransaccionPagoCreate(TransaccionPagoBase):
-    """
-    Esquema para la creación de una transacción de pago.
-    """
-
     id_asignacion: int
-    id_usuario: int 
+    id_usuario: int
+
 
 class TransaccionPagoInDB(TransaccionPagoBase):
-    """
-    Esquema para una transacción de pago en la DB.
-    """
-
     id_transaccion: int
     id_asignacion: int
     fecha_hora_pago: datetime
@@ -277,27 +181,15 @@ class TransaccionPagoInDB(TransaccionPagoBase):
 
 
 class NotificacionBase(BaseModel):
-    """
-    Esquema base para una notificación.
-    """
-
     titulo: str
     mensaje: str
 
 
 class NotificacionCreate(NotificacionBase):
-    """
-    Esquema para la creación de una notificación.
-    """
-
     id_usuario: int
 
 
 class NotificacionInDB(NotificacionBase):
-    """
-    Esquema para una notificación en la DB.
-    """
-
     id_notificacion: int
     id_usuario: int
     leida: bool
@@ -308,10 +200,6 @@ class NotificacionInDB(NotificacionBase):
 
 
 class IncidenteBase(BaseModel):
-    """
-    Esquema base para un incidente.
-    """
-
     descripcion: str
     ubicacion_lat: Optional[float] = None
     ubicacion_lon: Optional[float] = None
@@ -320,19 +208,11 @@ class IncidenteBase(BaseModel):
 
 
 class IncidenteCreate(IncidenteBase):
-    """
-    Esquema para la creación de un incidente.
-    """
-
     id_usuario: int
     id_solicitud: Optional[int] = None
 
 
 class IncidenteInDB(IncidenteBase):
-    """
-    Esquema para un incidente en la DB.
-    """
-
     id_incidente: int
     id_usuario: int
     fecha_hora_incidente: datetime
@@ -342,10 +222,6 @@ class IncidenteInDB(IncidenteBase):
 
 
 class RutaBase(BaseModel):
-    """
-    Esquema base para una ruta.
-    """
-
     nombre: str
     origen_lat: float
     origen_lon: float
@@ -354,17 +230,10 @@ class RutaBase(BaseModel):
 
 
 class RutaCreate(RutaBase):
-    """
-    Esquema para la creación de una ruta.
-    """
     pass
 
 
 class RutaInDB(RutaBase):
-    """
-    Esquema para una ruta en la DB.
-    """
-
     id_ruta: int
 
     class Config:
@@ -372,40 +241,30 @@ class RutaInDB(RutaBase):
 
 
 class ConductorServicioBase(BaseModel):
-    """
-    Esquema base para la relación conductor-servicio.
-    """
-
     fecha_habilitacion: Optional[date] = None
 
 
 class ConductorServicioCreate(ConductorServicioBase):
-    """
-    Esquema para la creación de una relación conductor-servicio.
-    """
-
     id_conductor: int
     id_tipo_servicio: int
 
 
 class ConductorServicioInDB(ConductorServicioBase):
-    """
-    Esquema para la relación conductor-servicio en la DB.
-    """
-
     id_conductor: int
     id_tipo_servicio: int
 
     class Config:
         from_attributes = True
-        
+
+
+# Catálogos
 
 class TipoClienteSchema(BaseModel):
     id_tipo_cliente: int
     nombre: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class EstadoConductorSchema(BaseModel):
@@ -413,7 +272,7 @@ class EstadoConductorSchema(BaseModel):
     descripcion: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class TipoVehiculoSchema(BaseModel):
@@ -421,7 +280,7 @@ class TipoVehiculoSchema(BaseModel):
     descripcion: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class EstadoVehiculoSchema(BaseModel):
@@ -429,7 +288,7 @@ class EstadoVehiculoSchema(BaseModel):
     descripcion: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class TipoServicioSchema(BaseModel):
@@ -437,7 +296,7 @@ class TipoServicioSchema(BaseModel):
     descripcion: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class EstadoSolicitudSchema(BaseModel):
@@ -445,7 +304,7 @@ class EstadoSolicitudSchema(BaseModel):
     descripcion: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 IncidenteEmergenciaCreate = IncidenteCreate
