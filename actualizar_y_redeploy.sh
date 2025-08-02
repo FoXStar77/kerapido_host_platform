@@ -27,8 +27,9 @@ fi
 
 # 5. Re-despliega el contenedor
 echo "🔄 Re-deploying con Docker Compose..."
-docker-compose down
-docker-compose up -d
+docker-compose down --remove-orphans --volumes --rmi all
+docker-compose up --build -d
+docker-compose logs -f --tail=50
 
 echo "✅ Proceso completado con éxito."
 
