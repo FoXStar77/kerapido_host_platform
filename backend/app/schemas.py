@@ -261,8 +261,7 @@ class TransaccionPagoCreate(TransaccionPagoBase):
     """
 
     id_asignacion: int
-    id_usuario: int
-    
+    id_usuario: int 
 
 class TransaccionPagoInDB(TransaccionPagoBase):
     """
@@ -399,6 +398,55 @@ class ConductorServicioInDB(ConductorServicioBase):
 
     class Config:
         from_attributes = True
+        
+
+class TipoClienteSchema(BaseModel):
+    id_tipo_cliente: int
+    nombre: str
+
+    class Config:
+        orm_mode = True
+
+
+class EstadoConductorSchema(BaseModel):
+    id_estado_conductor: int
+    descripcion: str
+
+    class Config:
+        orm_mode = True
+
+
+class TipoVehiculoSchema(BaseModel):
+    id_tipo_vehiculo: int
+    descripcion: str
+
+    class Config:
+        orm_mode = True
+
+
+class EstadoVehiculoSchema(BaseModel):
+    id_estado_vehiculo: int
+    descripcion: str
+
+    class Config:
+        orm_mode = True
+
+
+class TipoServicioSchema(BaseModel):
+    id_tipo_servicio: int
+    descripcion: str
+
+    class Config:
+        orm_mode = True
+
+
+class EstadoSolicitudSchema(BaseModel):
+    id_estado_solicitud: int
+    descripcion: str
+
+    class Config:
+        orm_mode = True
+
 
 IncidenteEmergenciaCreate = IncidenteCreate
 IncidenteEmergenciaInDB = IncidenteInDB
