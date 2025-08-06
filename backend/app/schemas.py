@@ -1,6 +1,7 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field, validator
 from datetime import datetime, date
 from typing import Optional, List
+import re
 
 
 class Token(BaseModel):
@@ -25,8 +26,41 @@ class UsuarioBase(BaseModel):
     codigo_postal: Optional[str] = None
 
 
-class UsuarioCreate(UsuarioBase):
+class UsuarioCreate(BaseModel):
+    nombre: str = Field(..., min_length=2)
+    apellidos: str = Field(..., min_length=2)
+    telefono: str = Field(..., min_length=8)
+    email: Optional[EmailStr] = None
     password: str
+    carnet_identidad: str
+    domicilio_actual: Optional[str] = None
+    codigo_postal: Optional[str] = None
+    es_cliente: bool = True
+    es_conductor: bool = False
+    es_admin: bool = False
+
+    @validator("carnet_identidad")
+    def validar_ci_cubano(cls, v):
+        if not re.fullmatch(r"\d{11}", v):
+            raise ValueError("El carnet de identidad debe tener 11 dígitos.")
+        año = int(v[0:2])
+        mes = int(v[2:4])
+        dia = int(v[4:6])
+        if not (1 <= mes <= 12 and 1 <= dia <= 31):
+            raise ValueError("Carnet de identidad inválido: fecha no válida.")
+        return v
+
+    @validator("password")
+    def validar_password_segura(cls, v):
+        if len(v) < 8:
+            raise ValueError("La contraseña debe tener al menos 8 caracteres.")
+        if not re.search(r"[A-Za-z]", v):
+            raise ValueError("La contraseña debe contener letras.")
+        if not re.search(r"[0-9]", v):
+            raise ValueError("La contraseña debe contener números.")
+        if not re.search(r"[~!@#$%^&*()_+{}\[\]|:\";',./<>?]", v):
+            raise ValueError("La contraseña debe incluir al menos un carácter especial.")
+        return v
 
 
 class UsuarioUpdate(UsuarioBase):

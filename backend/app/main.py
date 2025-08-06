@@ -3,6 +3,9 @@
 from fastapi import FastAPI
 from app.utils.logging_config import setup_logging
 from fastapi.middleware.cors import CORSMiddleware
+from app.routers import registro
+app.include_router(registro.router)
+
 
 from app.routers import (
     auth,
