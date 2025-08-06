@@ -4,7 +4,6 @@ from fastapi import FastAPI
 from app.utils.logging_config import setup_logging
 from fastapi.middleware.cors import CORSMiddleware
 from app.routers import registro
-app.include_router(registro.router)
 
 
 from app.routers import (
@@ -33,6 +32,7 @@ app = FastAPI(
 )
 
 # CORS Middleware (importantísimo para frontend)
+app.include_router(registro.router)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # o restringe según dominio
