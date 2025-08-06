@@ -32,7 +32,6 @@ app = FastAPI(
 )
 
 # CORS Middleware (importantísimo para frontend)
-app.include_router(registro.router)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # o restringe según dominio
@@ -54,6 +53,7 @@ app.include_router(solicitudes.router)
 app.include_router(asignaciones.router)
 app.include_router(pagos.router)
 app.include_router(emergencias.router)
+app.include_router(registro.router)
 
 
 @app.get("/", tags=["Health"])

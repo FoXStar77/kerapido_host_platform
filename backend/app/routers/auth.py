@@ -14,7 +14,6 @@ router = APIRouter(
     tags=["Authentication"]
 )
 
-
 @router.post("/token", response_model=schemas.Token)
 async def login_for_access_token(
     form_data: OAuth2PasswordRequestForm = Depends(),
@@ -33,3 +32,15 @@ async def login_for_access_token(
         expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}
+
+
+# ✅ Nuevo endpoint para aceptar POST /auth/signup desde Flutter
+@router.post("/signup", response_model=schemas.UsuarioInDB)
+def registrar_cliente_desde_auth(
+    registro: schemas.UsuarioCreate,
+    db: Session = Depends(get_db)
+):
+    nuevo_usuario = crud.create_usuario(db, registro)
+    cliente_data = schemas.ClienteCreate(id_usuario=nuevo_usuario.id_usuario)
+    crud.create_cliente(db, cliente_data)
+    return nuevo_usuario
